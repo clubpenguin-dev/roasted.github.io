@@ -1,62 +1,68 @@
-// Initialize Firebase (Firebase config needs to be added here)
+// Firebase authentication setup (make sure your Firebase config is added)
 firebase.initializeApp(firebaseConfig);
 
 // Elements
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+const logoutButton = document.getElementById('logout-button');
 const postButton = document.getElementById('post-button');
 const postInput = document.getElementById('post-input');
-const meterValue = document.getElementById('meter-value');
 const postsContainer = document.getElementById('posts-container');
+const userNameDisplay = document.getElementById('user-name-display');
 
-// Firebase references
-const postsRef = firebase.firestore().collection('posts');
-const userRef = firebase.firestore().collection('users');
+// Authentication: User Sign Up
+signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
-// Event listener for posting a roast
-postButton.addEventListener('click', async () => {
-  const roastText = postInput.value;
-  if (roastText) {
-    const roastStrength = calculateRoastStrength(roastText);
-    const post = {
-      text: roastText,
-      strength: roastStrength,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-
-    // Save post to Firebase
-    await postsRef.add(post);
-
-    // Clear input
-    postInput.value = '';
+  try {
+    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    console.log('User signed up:', userCredential.user);
+    // Redirect to feed or homepage
+    window.location.href = 'feed.html'; // Assuming feed.html is your main post page
+  } catch (error) {
+    alert(error.message);
   }
 });
 
-// Calculate the strength of the roast (this can be enhanced)
-function calculateRoastStrength(roast) {
-  const insults = ['stupid', 'dumb', 'ugly', 'loser', 'idiot'];
-  let strength = 0;
-  insults.forEach(word => {
-    if (roast.toLowerCase().includes(word)) {
-      strength++;
-    }
-  });
-  meterValue.textContent = strength;
-  return strength;
-}
+// Authentication: User Login
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
-// Fetch posts from Firebase and display them
-async function loadPosts() {
-  const snapshot = await postsRef.orderBy('timestamp', 'desc').get();
-  snapshot.forEach(doc => {
-    const post = doc.data();
-    const postElement = document.createElement('div');
-    postElement.classList.add('post');
-    postElement.innerHTML = `
-      <p>${post.text}</p>
-      <p>Roast Strength: ${post.strength}</p>
-    `;
-    postsContainer.appendChild(postElement);
-  });
-}
+  try {
+    const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+    console.log('User logged in:', userCredential.user);
+    // Redirect to feed or homepage
+    window.location.href = 'feed.html';
+  } catch (error) {
+    alert(error.message);
+  }
+});
 
-// Load posts on page load
-loadPosts();
+// Authentication: User Logout
+logoutButton.addEventListener('click', async () => {
+  try {
+    await firebase.auth().signOut();
+    console.log('User logged out');
+    window.location.href = 'login.html'; // Assuming login.html is your login page
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+// Firebase Auth State Change Listener (to handle page redirects if not logged in)
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log('User is logged in:', user);
+    // Show user info and posts if logged in
+    userNameDisplay.textContent = user.displayName || user.email;
+    loadPosts();
+  } else {
+    console.log('No user is logged in');
+    // Redirect to login if not logged in
+    window.location.href = 'login.html';
+  }
+});

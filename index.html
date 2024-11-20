@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roasted - A Social Media of Roasts</title>
+  <title>Roasted - The Social Media of Roasts</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>Welcome to Roasted!</h1>
-    <p>The place where your roasts boost your profile.</p>
+    <h1>Roasted</h1>
+    <button id="logout-button">Logout</button>
   </header>
 
   <main>
-    <section id="post-roast">
-      <textarea id="roast-input" placeholder="Type your roast here..."></textarea>
-      <button id="post-button">Post Roast</button>
-      <div id="roast-meter">Roast Meter: <span id="meter-value">0</span></div>
-    </section>
+    <!-- Feed Section -->
+    <section id="feed">
+      <div id="new-post">
+        <textarea id="post-input" placeholder="Post a roast..."></textarea>
+        <button id="post-button">Post Roast</button>
+        <div id="roast-meter">Roast Strength: <span id="meter-value">0</span></div>
+      </div>
 
-    <section id="roast-feed">
-      <h2>Recent Roasts</h2>
-      <div id="posts"></div>
+      <div id="posts-container"></div>
     </section>
   </main>
 

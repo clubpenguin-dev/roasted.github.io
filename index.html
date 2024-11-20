@@ -1,9 +1,34 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Example</title>
-    </head>
-    <body>
-        <p>This is an example of a simple HTML page with one paragraph.</p>
-    </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roasted - A Social Media of Roasts</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to Roasted!</h1>
+    <p>The place where your roasts boost your profile.</p>
+  </header>
+
+  <main>
+    <section id="post-roast">
+      <textarea id="roast-input" placeholder="Type your roast here..."></textarea>
+      <button id="post-button">Post Roast</button>
+      <div id="roast-meter">Roast Meter: <span id="meter-value">0</span></div>
+    </section>
+
+    <section id="roast-feed">
+      <h2>Recent Roasts</h2>
+      <div id="posts"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Roasted Social Media</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
 </html>

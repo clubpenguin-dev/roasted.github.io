@@ -1,24 +1,37 @@
-document.getElementById('post-button').addEventListener('click', postRoast);
+// Initialize Firebase (Firebase config needs to be added here)
+firebase.initializeApp(firebaseConfig);
 
-function postRoast() {
-  const roastInput = document.getElementById('roast-input').value;
-  if (roastInput.length > 0) {
-    const roastStrength = calculateRoastStrength(roastInput);
-    const postElement = document.createElement('div');
-    postElement.classList.add('post');
-    postElement.innerHTML = `
-      <p>${roastInput}</p>
-      <p>Roast Strength: ${roastStrength}</p>
-    `;
-    document.getElementById('posts').prepend(postElement);
+// Elements
+const postButton = document.getElementById('post-button');
+const postInput = document.getElementById('post-input');
+const meterValue = document.getElementById('meter-value');
+const postsContainer = document.getElementById('posts-container');
 
-    // Clear the input after posting
-    document.getElementById('roast-input').value = '';
+// Firebase references
+const postsRef = firebase.firestore().collection('posts');
+const userRef = firebase.firestore().collection('users');
+
+// Event listener for posting a roast
+postButton.addEventListener('click', async () => {
+  const roastText = postInput.value;
+  if (roastText) {
+    const roastStrength = calculateRoastStrength(roastText);
+    const post = {
+      text: roastText,
+      strength: roastStrength,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    // Save post to Firebase
+    await postsRef.add(post);
+
+    // Clear input
+    postInput.value = '';
   }
-}
+});
 
+// Calculate the strength of the roast (this can be enhanced)
 function calculateRoastStrength(roast) {
-  // Basic roast strength based on keywords (This can be enhanced)
   const insults = ['stupid', 'dumb', 'ugly', 'loser', 'idiot'];
   let strength = 0;
   insults.forEach(word => {
@@ -26,6 +39,24 @@ function calculateRoastStrength(roast) {
       strength++;
     }
   });
-  document.getElementById('meter-value').innerText = strength;
+  meterValue.textContent = strength;
   return strength;
 }
+
+// Fetch posts from Firebase and display them
+async function loadPosts() {
+  const snapshot = await postsRef.orderBy('timestamp', 'desc').get();
+  snapshot.forEach(doc => {
+    const post = doc.data();
+    const postElement = document.createElement('div');
+    postElement.classList.add('post');
+    postElement.innerHTML = `
+      <p>${post.text}</p>
+      <p>Roast Strength: ${post.strength}</p>
+    `;
+    postsContainer.appendChild(postElement);
+  });
+}
+
+// Load posts on page load
+loadPosts();

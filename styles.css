@@ -1,0 +1,52 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #ff6347;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+#post-roast {
+  margin: 20px;
+}
+
+#roast-input {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+}
+
+#post-button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#post-button:hover {
+  background-color: #e55342;
+}
+
+#roast-meter {
+  margin-top: 10px;
+}
+
+#roast-feed {
+  margin: 20px;
+}
+
+#posts {
+  margin-top: 20px;
+}
